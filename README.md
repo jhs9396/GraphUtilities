@@ -6,9 +6,14 @@ STS springboot
 ## step 1. Installation AgensGraph version 1.2↑ (base on PostgreSQL)
 [agensgraph link] : https://github.com/bitnine-oss/agensgraph
 
-pg_hba.conf
+pg_hba.conf edit
 ````
 host  all all your_ip trust(or md5 (used password))
+````
+
+postgresql.conf edit
+````
+listen_addresses = '*'
 ````
 
 ## step 2. Graph data import
