@@ -61,25 +61,31 @@ public class TestService {
 	 * @return	그래프 format에 데이터 입력 후 넘겨주기
 	 */
 	public JSONArray getData() {
-		JSONArray resJson = new JSONArray();
-		StringBuffer query = new StringBuffer();
+		JSONArray   resJson = new JSONArray();             // result graph data를 담는 객체
+		StringBuffer  query = new StringBuffer();          // query를 작성하는 StringBuffer
 		query.append(" MATCH (a)-[r]->(b) "
 				   + " RETURN id(a) AS a_id, label(r) AS r_label, id(b) AS b_id ");
 		
-		JSONArray qryRslt = qt.doQuery(query.toString());
+		JSONArray qryRslt = qt.doQuery(query.toString());  // query 실행
 		
+		// graph data setting by GraphUtilities
 		for(int i=0; i<qryRslt.size(); i++) {
-			String source_id = ((JSONObject)qryRslt.get(i)).get("a_id").toString();
-			String r_label = ((JSONObject)qryRslt.get(i)).get("r_label").toString();
-			String target_id = ((JSONObject)qryRslt.get(i)).get("b_id").toString();
+			String source_id = ((JSONObject)qryRslt.get(i)).get("a_id").toString();    // source vertex 
+			String r_label   = ((JSONObject)qryRslt.get(i)).get("r_label").toString(); // edge
+			String target_id = ((JSONObject)qryRslt.get(i)).get("b_id").toString();    // target vertex
 			
+			// nodes setting
 			gu.node(source_id, "source"+i);
 			gu.node(target_id, "target"+i);
+			
+			// edge setting
 			gu.edge("rel"+i, r_label, source_id, target_id);
 		}
 		
-		resJson.add(gu.toJsonArray());
-		logger.info("resJson >> "+resJson.toJSONString());
+		resJson.add(gu.toJsonArray());                      // result add JSONArray
+		logger.info("resJson >> "+resJson.toJSONString()); 
+		gu.graphInit();                                     // graph data initialize
+		
 		return resJson;
 	}
 }
