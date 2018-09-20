@@ -37,6 +37,41 @@ public void testMethod(){
      ....
 }
 ````
+# gu.node, edge format
+
+````
+	public void node(Object id, Object name) {
+		JSONObject node = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		data.put("id",    id);
+		data.put("name",  name);
+		
+		node.put("group", "nodes");
+		node.put("data",  data);
+		
+		nodes.add(node);
+	}
+     
+     public void edge(Object id, Object label, Object source, Object target) {
+		JSONObject edge = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		data.put("id",     id);
+		data.put("label",  label);
+		data.put("source", source);
+		data.put("target", target);
+		
+		edge.put("group",  "edges");
+		edge.put("data",   data);
+		
+		edges.add(edge);
+	}
+     
+     not yet style setting. but very easy. soon updating.
+````
+
+
 
 # Nodes, Edges clear
 
