@@ -1,0 +1,85 @@
+package net.demo.modules.services;
+
+import java.text.SimpleDateFormat;
+
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
+import net.bitnine.agensgraph.deps.org.json.simple.JSONObject;
+import net.demo.modules.logger.UDLogger;
+import net.demo.modules.services.db.QueryTemplate;
+import net.demo.modules.util.GraphUtilities;
+
+/**
+ * AgensGraph Test service
+ * 
+ * @author		HyeonSu Jeon
+ * @version		0.2
+ * @since		0.1
+ */
+@Service
+@SuppressWarnings("unchecked")
+public class TestService {
+	
+	/**
+	 * slf4j logger
+	 */
+	@UDLogger Logger logger;
+	
+	/**
+	 * GraphUtilities 객체
+	 */
+	GraphUtilities gu;
+	
+	/**
+	 * QueryTemplate 객체
+	 */
+	QueryTemplate qt;
+	
+	/**
+	 * SimpleDateformat 연-월-일 시:분:초
+	 */
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	/**
+	 * Injection Constructor
+	 * 
+	 */
+	@Autowired
+	public TestService(@Qualifier("GraphUtil")GraphUtilities gu, @Qualifier("QueryTemplate")QueryTemplate qt) {
+		this.gu = gu;
+		this.qt = qt;
+	}
+	
+	/**
+	 * Graph 조회 ---> GraphUtilities를 이용하여 포맷 설정
+	 * 
+	 * @param	not	하지만 화면에서 parameters를 넘겨서 처리 가능
+	 * @return	그래프 format에 데이터 입력 후 넘겨주기
+	 */
+	public JSONArray getData() {
+		JSONArray resJson = new JSONArray();
+		StringBuffer query = new StringBuffer();
+		query.append(" MATCH (a)-[r]->(b) "
+				   + " RETURN id(a) AS a_id, label(r) AS r_label, id(b) AS b_id ");
+		
+		JSONArray qryRslt = qt.doQuery(query.toString());
+		
+		for(int i=0; i<qryRslt.size(); i++) {
+			String source_id = ((JSONObject)qryRslt.get(i)).get("a_id").toString();
+			String r_label = ((JSONObject)qryRslt.get(i)).get("r_label").toString();
+			String target_id = ((JSONObject)qryRslt.get(i)).get("b_id").toString();
+			
+			gu.node(source_id, "source"+i);
+			gu.node(target_id, "target"+i);
+			gu.edge("rel"+i, r_label, source_id, target_id);
+		}
+		
+		resJson.add(gu.toJsonArray());
+		logger.info("resJson >> "+resJson.toJSONString());
+		return resJson;
+	}
+}
