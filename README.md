@@ -19,7 +19,8 @@ listen_addresses = '*'
 ## step 2. Graph data import
 ````
 agens=# \i $file_path (e.g. \i /home/user/file.txt)
-
+or 
+agens=# CREATE (a:test {name:'person1'})-[r:knows]->(b:test {name:'person2'});
 ````
 
 ## step 3. Source import 
