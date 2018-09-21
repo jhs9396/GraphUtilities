@@ -82,7 +82,7 @@ public class TestService {
 			gu.edge("rel"+i, r_label, source_id, target_id);
 		}
 		
-		resJson.add(gu.toJsonArray());                      // result add JSONArray
+		resJson = gu.toJsonArray();                         // result add JSONArray
 		logger.info("resJson >> "+resJson.toJSONString()); 
 		gu.graphInit();                                     // graph data initialize
 		

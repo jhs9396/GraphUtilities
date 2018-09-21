@@ -101,12 +101,11 @@ public class GraphUtilController {
 		logger.debug("[getGraphData] Input: "+params);
 		
 		hd.setParameters(params);
-		hd.setEmbedded(ts.getData().toJSONString());
+		hd.setEmbedded(ts.getData());
 		hd.selfLink(resource, methodOn(this.getClass()).getGraphData(params));
 		
 		logger.debug("[getGraphData] Output: "+resource);
 		
 		return new ResponseEntity<Resource<HateoasDTO>> (resource,productHeaders(),HttpStatus.OK);
 	}
-	
 }

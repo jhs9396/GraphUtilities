@@ -24,4 +24,5 @@ public class GraphConfig {
 	public GraphUtilities createGraphObject() {
 		return new GraphUtilities();
 	}
+	
 }

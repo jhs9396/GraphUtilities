@@ -23,7 +23,7 @@ public class HateoasDTO {
 	/**
 	 * result field
 	 */
-	String embedded;
+	Object embedded;
 	
 	/**
 	 * request parameters list getter
@@ -48,7 +48,7 @@ public class HateoasDTO {
 	 * 
 	 * @return	String으로 변환된 result를 가져온다.
 	 */
-	public String getEmbedded() {
+	public Object getEmbedded() {
 		return embedded;
 	}
 	
@@ -58,7 +58,7 @@ public class HateoasDTO {
 	 * 
 	 * @param	embedded	String으로 변환된 result variable
 	 */
-	public void setEmbedded(String embedded) {
+	public void setEmbedded(Object embedded) {
 		this.embedded = embedded;
 	}
 	
