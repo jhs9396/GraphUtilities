@@ -1,8 +1,8 @@
 # GraphUtilities
+- Nodes, Edges formatting method utilities. - by java. As soon as React.Component!
 - Graph data Drawing utilities by AgensGraph, GraphWidget(Cytoscape.js+Coffeescript.js)
 - STS springboot
 - RESTful by Hateoas(Level 3)
-- by java
 - Thymeleaf example. (but, Data must be imported.)
 - User-Defined logger
 - GraphWidget example source : https://callin2.github.io/graph_wiget/
