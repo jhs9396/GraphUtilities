@@ -3,7 +3,9 @@
 - STS springboot
 - RESTful by Hateoas(Level 3)
 - by java
+- Thymeleaf example. (but, Data must be imported.)
 - User-Defined logger
+- GraphWidget example source : https://callin2.github.io/graph_wiget/
 
 # How to use GraphUtilies 
 ## step 1. Installation AgensGraph version 1.2↑ (base on PostgreSQL)
@@ -80,8 +82,6 @@ public void edge(Object id, Object label, Object source, Object target) {
 // not yet style setting. but very easy. soon updating.
 ````
 
-
-
 # Nodes, Edges clear
 
 ````
@@ -93,6 +93,12 @@ gu.graphInit();
 ````
 gu.toJsonArray();
 ````
+
+## get uri call : http://localhost:8080/index
+
+result view - AgensGraph Vertex data, Edge data visualization by GraphWidget.js
+
+![Alt text](src/main/resources/static/images/screenshot.png)
 
 # Update to future
 - I want to provide functionality as a React component. 
