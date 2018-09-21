@@ -80,7 +80,9 @@ public class GraphUtilController {
 	/**
 	 * Constructor
 	 * 
-	 * @param	ccs		ClassifierService injection object
+	 * @param	ts       TestService injection용 객체
+	 * @param	hd       HateoasDTO bean 객체
+	 * @param	resource Hateoas 규격 객체
 	 */
 	@Autowired
 	public GraphUtilController(TestService ts, HateoasDTO hd, Resource<HateoasDTO> resource) {
