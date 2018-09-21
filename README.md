@@ -97,6 +97,7 @@ gu.toJsonArray();
 ## get uri call : http://localhost:8080/index
 
 result view - AgensGraph Vertex data, Edge data visualization by GraphWidget.js
+but, Any JSONArray data that matches the Cytoscape format is all that is possible
 
 ![Alt text](src/main/resources/static/images/screenshot.png)
 
