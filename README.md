@@ -1,5 +1,5 @@
 # GraphUtilities
-- Nodes, Edges formatting method utilities. - by java. As soon as React.Component!
+- Nodes, Edges formatting method utilities. - by java. As soon as possible React.Component!
 - Graph data Drawing utilities by AgensGraph, GraphWidget(Cytoscape.js+Coffeescript.js)
 - STS springboot
 - RESTful by Hateoas(Level 3)
