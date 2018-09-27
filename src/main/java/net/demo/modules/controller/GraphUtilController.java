@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resource;
@@ -85,7 +86,7 @@ public class GraphUtilController {
 	 * @param	resource Hateoas 규격 객체
 	 */
 	@Autowired
-	public GraphUtilController(TestService ts, HateoasDTO hd, Resource<HateoasDTO> resource) {
+	public GraphUtilController(TestService ts, @Qualifier("hateoas")HateoasDTO hd, @Qualifier("hateoasResource")Resource<HateoasDTO> resource) {
 		this.ts       = ts;
 		this.hd       = hd;
 		this.resource = resource;

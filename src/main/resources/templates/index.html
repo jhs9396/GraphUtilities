@@ -21,7 +21,8 @@ $.ajax({
     , data: null
     , dataType : "json"
     , success: function (data) {
-    	
+    	console.log('data', data)
+    	console.log('data embedded', data.embedded)
     	// GraphWidget Object variable
 		var GW = GraphWidget.GraphWidget
 		
