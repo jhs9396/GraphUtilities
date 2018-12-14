@@ -1,0 +1,53 @@
+{
+  "name": "spring-data-rest-and-reactjs",
+  "version": "0.1.0",
+  "description": "Demo of ReactJS + Spring Data REST",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:spring-guides/tut-react-and-spring-data-rest.git"
+  },
+  "keywords": [
+    "rest",
+    "hateoas",
+    "spring",
+    "data",
+    "react"
+  ],
+  "author": "Greg L. Turnquist",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/spring-guides/tut-react-and-spring-data-rest/issues"
+  },
+  "homepage": "https://github.com/spring-guides/tut-react-and-spring-data-rest",
+  "presets": [
+    "@babel/preset-env"
+  ],
+  "dependencies": {
+    "acorn": "^6.0.2",
+    "axios": "^0.18.0",
+    "css-loader": "^0.28.11",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
+    "react-fontawesome": "^1.6.1",
+    "react-hot-loader": "^4.3.11",
+    "react-router-dom": "^4.3.1",
+    "rest": "^1.3.1",
+    "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
+    "w3-css": "^4.1.0",
+    "webpack": "^3.12.0",
+    "webpack-dev-server": "^2.10.1"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --content-base src --hot --inline --watch",
+    "watch": "webpack --watch -d",
+    "build": "webpack -p"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1"
+  }
+}

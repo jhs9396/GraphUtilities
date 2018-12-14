@@ -9,6 +9,8 @@
 .settings
 .springBeans
 .sts4-cache
+.package-lock.json
+node_modules/
 
 ### IntelliJ IDEA ###
 .idea

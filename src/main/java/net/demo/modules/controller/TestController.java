@@ -22,4 +22,14 @@ public class TestController {
 	public String index() {
 		return "index";		
 	}
+	
+	/**
+	 * main page call method
+	 * 
+	 * @return	index.html call 
+	 */
+	@RequestMapping(value="/main")
+	public String main() {
+		return "main";		
+	}	
 }
