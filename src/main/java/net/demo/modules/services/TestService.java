@@ -63,6 +63,11 @@ public class TestService {
 	public JSONArray getData() {
 		JSONArray   resJson = new JSONArray();             // result graph data를 담는 객체
 		StringBuffer  query = new StringBuffer();          // query를 작성하는 StringBuffer
+		
+		query.append(" MATCH (a)-[r]->(b) RETURN a,r,b LIMIT 10 ");
+		qt.doQuery(query.toString());
+		query.delete(0, query.length());
+		
 		query.append(" MATCH (a)-[r]->(b) "
 				   + " RETURN id(a) AS a_id, label(r) AS r_label, id(b) AS b_id ");
 		
