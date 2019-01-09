@@ -20,8 +20,14 @@ import net.demo.modules.util.GraphUtilities;
  * @version		0.2
  * @since		0.1
  */
+/**
+ * Short one line description
+ * 
+ * @author		HyeonSu Jeon
+ * @version		0.2
+ * @since		0.1
+ */
 @Service
-@SuppressWarnings("unchecked")
 public class TestService {
 	
 	/**
@@ -63,11 +69,7 @@ public class TestService {
 	public JSONArray getData() {
 		JSONArray   resJson = new JSONArray();             // result graph data를 담는 객체
 		StringBuffer  query = new StringBuffer();          // query를 작성하는 StringBuffer
-		
-		query.append(" MATCH (a)-[r]->(b) RETURN a,r,b LIMIT 10 ");
-		qt.doQuery(query.toString());
-		query.delete(0, query.length());
-		
+				
 		query.append(" MATCH (a)-[r]->(b) "
 				   + " RETURN id(a) AS a_id, label(r) AS r_label, id(b) AS b_id ");
 		
@@ -92,5 +94,43 @@ public class TestService {
 		gu.graphInit();                                     // graph data initialize
 		
 		return resJson;
+	}
+	
+	/**
+	 * Graph data Neo4j formatting test service method
+	 * 
+	 * @return	cytoscape.js graph format JSONArray return
+	 */
+	public JSONArray getNeo4jFormatTest() {		
+		qt.query.append(" MATCH (a)-[r]->(b) RETURN a,r,b ");
+		
+		JSONObject result = qt.doGraphQuery(qt.query.toString());
+		
+		JSONArray nodes = ((JSONArray)((JSONObject)result.get("graph")).get("nodes"));
+		JSONArray edges = ((JSONArray)((JSONObject)result.get("graph")).get("edges"));
+		JSONArray etc   = ((JSONObject)result.get("graph")).get("etc") != null ? ((JSONArray)((JSONObject)result.get("graph")).get("etc")) : new JSONArray();
+		
+		for(int i=0; i<nodes.size(); i++) {
+			gu.node(((JSONObject)nodes.get(i)).get("id").toString(), 
+					i,
+					((JSONObject)nodes.get(i)).get("label").toString(),
+					"node");
+		}
+		
+		for(int i=0; i<edges.size(); i++) {
+			gu.edge(((JSONObject)edges.get(i)).get("id").toString(), 
+					((JSONObject)edges.get(i)).get("label"), 
+					((JSONObject)edges.get(i)).get("startNode"), 
+					((JSONObject)edges.get(i)).get("endNode"), 
+					"edge");
+		}
+		
+		for(int i=0; i<etc.size(); i++) {
+			// nothing
+		}
+		
+		logger.info("getNeo4jFormattest result >> "+result);
+		
+		return gu.toJsonArray();
 	}
 }

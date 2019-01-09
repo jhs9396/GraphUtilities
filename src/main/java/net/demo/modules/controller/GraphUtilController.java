@@ -104,7 +104,7 @@ public class GraphUtilController {
 		logger.debug("[getGraphData] Input: "+params);
 		
 		hd.setParameters(params);
-		hd.setEmbedded(ts.getData());
+		hd.setEmbedded(ts.getNeo4jFormatTest());
 		hd.selfLink(resource, methodOn(this.getClass()).getGraphData(params));
 		
 		logger.debug("[getGraphData] Output: "+resource);

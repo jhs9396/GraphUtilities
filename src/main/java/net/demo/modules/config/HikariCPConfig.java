@@ -28,6 +28,12 @@ public class HikariCPConfig {
 	@Autowired
 	private Environment env;
 	
+	/**
+	 * QueryTemplate class injection object
+	 */
+	@Autowired
+	private QueryTemplate queryTemplate;
+	
 	@Value("${db.cpool.setMinimumIdle}")
     Integer minimumIdle;
 	
@@ -93,6 +99,6 @@ public class HikariCPConfig {
 	 */
 	@Bean(name="QueryTemplate")
 	public QueryTemplate createQueryTemplate() {
-		return new QueryTemplate();
+		return queryTemplate;
 	}
 }

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -24,6 +25,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
+import net.bitnine.agensgraph.deps.org.json.simple.JSONObject;
 import net.demo.modules.logger.UDLogger;
 import net.demo.modules.util.FormatUtilities;
 
@@ -38,14 +40,11 @@ public class QueryTemplate {
 	/**
 	 * JdbcTemplate 객체 호출
 	 */
-	@Autowired
-	@Qualifier("JdbcTemplate")
 	JdbcTemplate jdbcTemplate;
 	
 	/**
-	 * JSONArray Format 전용 객체 호출
+	 * Query ResultSet format 전용 객체 호출
 	 */
-	@Autowired
 	FormatUtilities fu;
 	
 	/**
@@ -53,6 +52,23 @@ public class QueryTemplate {
 	 */
 	@UDLogger Logger logger;
 	
+	/**
+	 * ANSI-SQL or Cypher query String buffer
+	 */
+	public StringBuffer query;
+	
+	/**
+	 * parameter list object
+	 */
+	public Map<String,Object> paramList;
+	
+	@Autowired
+	public QueryTemplate(FormatUtilities fu, @Qualifier("JdbcTemplate")JdbcTemplate jdbcTemplate) {
+		this.fu           = fu;
+		this.jdbcTemplate = jdbcTemplate;
+		this.query        = new StringBuffer();
+		this.paramList    = new LinkedHashMap<String,Object>();
+	}
 	
 	/**
 	 * statement Read용 쿼리 실행 Method 
@@ -78,6 +94,80 @@ public class QueryTemplate {
 			}
 		});
 		logger.debug(resJson.toJSONString());
+		return resJson;
+	}
+	
+	/**
+	 * statement Read용 쿼리 실행 Method 
+	 *
+	 * @param  query 		QueryFactory에서 전달받는 query
+	 * @throws Exception	JSONArray 생성 시 오류가 나는 경우
+	 * @return ResultSet을 JSONArray로 변경하여 전달
+	 */
+	@Cacheable
+	public JSONObject doGraphQuery(String query) {
+		JSONObject resJson = jdbcTemplate.query(query, new ResultSetExtractor<JSONObject>() {
+			@Override
+			public JSONObject extractData(ResultSet rs) throws SQLException, DataAccessException {
+				JSONObject ed = new JSONObject();
+				try {
+					ed =  fu.convertToGraphObj(rs);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return ed;
+			}
+		});
+		
+		logger.debug(resJson.toString());
+		initQuery();
+		
+		return resJson;
+	}
+	
+	/**
+	 * PreparedStatement Read용 쿼리 실행 Method 
+	 *
+	 * @param  query 				QueryFactory에서 전달받는 query
+	 * @param  paramList			Query parameters
+	 * @throws SQLException 		Query 문법/실행 에러
+	 * @throws DataAccessException	ResultSet DataAccess 시 에러 발생할 때	
+	 * @return ResultSet을 JSONArray로 변경하여 전달
+	 */
+	@Cacheable
+	public JSONObject doGraphQuery(String query, Map<String,?> paramList) {
+		JSONObject resJson = jdbcTemplate.query(query,
+			new PreparedStatementSetter() {
+				
+				@Override
+				public void setValues(PreparedStatement ps) throws SQLException {
+					int idx=1;
+					if(paramList != null) {
+						Iterator<String> keys = paramList.keySet().iterator();
+						while(keys.hasNext()) {
+							String key = keys.next();
+							ps.setObject(idx++, paramList.get(key));
+						}
+					}
+					ps.execute();
+				}
+			},		
+	        new ResultSetExtractor<JSONObject>() {
+				@Override
+				public JSONObject extractData(ResultSet rs) throws SQLException, DataAccessException {
+					JSONObject ed = new JSONObject();
+					try {
+						ed =  fu.convertToGraphObj(rs);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return ed;
+				}
+			});
+		
+		logger.debug(resJson.toString());
+		initQuery();
+		
 		return resJson;
 	}
 	
@@ -122,6 +212,7 @@ public class QueryTemplate {
 				}
 			});
 		logger.debug(resJson.toJSONString());
+		
 		return resJson;
 	}
 	
@@ -337,4 +428,12 @@ public class QueryTemplate {
 
 	}
 	
+	/**
+	 * StringBuffer and Map object initializing method
+	 * 
+	 */
+	public void initQuery() {
+		this.query.delete(0, this.query.length());
+		this.paramList.clear();
+	}
 }
