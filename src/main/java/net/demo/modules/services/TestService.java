@@ -20,13 +20,6 @@ import net.demo.modules.util.GraphUtilities;
  * @version		0.2
  * @since		0.1
  */
-/**
- * Short one line description
- * 
- * @author		HyeonSu Jeon
- * @version		0.2
- * @since		0.1
- */
 @Service
 public class TestService {
 	
