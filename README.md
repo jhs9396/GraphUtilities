@@ -48,6 +48,19 @@ public void testMethod(){
      ....
 }
 ````
+# Formatting cypher query ResultSet
+
+When you should be used cypher graph query (executing jdbc driver)
+Add to be used doGraphQuery method. here example method 
+Similar to Neo4j response format.
+QueryTemplate class
+````
+FormatUtilities fu;
+...
+fu.convertToGraphObj(resultSet);
+...
+````
+
 # gu.node, edge format
 
 ````
