@@ -7,7 +7,7 @@
 - User-Defined logger
 - GraphWidget example source : https://callin2.github.io/graph_wiget/
 
-# How to use GraphUtilies 
+# How to use GraphUtilities 
 ## step 1. Installation AgensGraph version 1.2↑ (base on PostgreSQL)
 [agensgraph link] : https://github.com/bitnine-oss/agensgraph
 
