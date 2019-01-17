@@ -104,14 +104,14 @@ public class TestService {
 		JSONArray etc   = ((JSONObject)result.get("graph")).get("etc") != null ? ((JSONArray)((JSONObject)result.get("graph")).get("etc")) : new JSONArray();
 		
 		for(int i=0; i<nodes.size(); i++) {
-			gu.node(((JSONObject)nodes.get(i)).get("id").toString(), 
+			gu.node(((JSONObject)nodes.get(i)).get("id"), 
 					i,
-					((JSONObject)nodes.get(i)).get("label").toString(),
+					((JSONObject)nodes.get(i)).get("label"),
 					"node");
 		}
 		
 		for(int i=0; i<edges.size(); i++) {
-			gu.edge(((JSONObject)edges.get(i)).get("id").toString(), 
+			gu.edge(((JSONObject)edges.get(i)).get("id"),
 					((JSONObject)edges.get(i)).get("label"), 
 					((JSONObject)edges.get(i)).get("startNode"), 
 					((JSONObject)edges.get(i)).get("endNode"), 
