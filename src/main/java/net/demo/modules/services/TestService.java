@@ -96,8 +96,6 @@ public class TestService {
 	 */
 	public JSONArray getNeo4jFormatTest() {		
 		qt.query.append(" MATCH (a)-[r]->(b) RETURN a,r,b ");
-		JSONArray test = qt.doQuery("MATCH (a:person) RETURN a.name AS name, label(a) AS label ");
-		System.out.println("test >> "+test);
 		
 		JSONObject result = qt.doGraphQuery(qt.query.toString());
 		
@@ -106,14 +104,14 @@ public class TestService {
 		JSONArray etc   = ((JSONObject)result.get("graph")).get("etc") != null ? ((JSONArray)((JSONObject)result.get("graph")).get("etc")) : new JSONArray();
 		
 		for(int i=0; i<nodes.size(); i++) {
-			gu.node(((JSONObject)nodes.get(i)).get("id"), 
+			gu.node(((JSONObject)nodes.get(i)).get("id").toString(), 
 					i,
-					((JSONObject)nodes.get(i)).get("label"),
+					((JSONObject)nodes.get(i)).get("label").toString(),
 					"node");
 		}
 		
 		for(int i=0; i<edges.size(); i++) {
-			gu.edge(((JSONObject)edges.get(i)).get("id"),
+			gu.edge(((JSONObject)edges.get(i)).get("id").toString(), 
 					((JSONObject)edges.get(i)).get("label"), 
 					((JSONObject)edges.get(i)).get("startNode"), 
 					((JSONObject)edges.get(i)).get("endNode"), 
