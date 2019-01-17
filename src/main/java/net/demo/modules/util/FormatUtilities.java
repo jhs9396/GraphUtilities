@@ -8,10 +8,8 @@ import org.springframework.stereotype.Component;
 
 import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
 import net.bitnine.agensgraph.deps.org.json.simple.JSONObject;
-import net.bitnine.agensgraph.deps.org.json.simple.parser.JSONParser;
 import net.bitnine.agensgraph.graph.Edge;
 import net.bitnine.agensgraph.graph.Vertex;
-import net.bitnine.agensgraph.graph.property.JsonObject;
 import net.demo.modules.logger.UDLogger;
 
 /**
@@ -48,19 +46,20 @@ public class FormatUtilities {
 	/**
 	 * Convert a ResultSet that it is similar to Neo4j format 
 	 * {graph:{nodes:[...],edges:[...],etc:[]}}
+	 * jdbc driver version upgrade : 1.3.2 -> 1.4.2
+	 * REMOVE : JsonObject, JSONParser 
+	 * MODIFY : jdbc driver method naming (getProperty()->getProperties(), getEndVertexid()-> getEndVertexId()) 
 	 *
 	 * @param resultSet   cypher query result set list
 	 * @throws Exception  When logic that is parser, converting was executed by error
 	 * @return After resultSet parsing, JSONObject return 
 	 */
-	@SuppressWarnings("resource")
 	public JSONObject convertToGraphObj(ResultSet resultSet) throws Exception {
 		JSONObject resJson    = new JSONObject();   // formatting response result object 
 		JSONObject graph      = new JSONObject();   // graph format similar to Neo4j 
 		JSONArray  nodes      = new JSONArray();    // node list object array
 		JSONArray  edges      = new JSONArray();    // edge list object array
 		JSONArray  etc        = new JSONArray();    // etc list object array
-		JSONParser parser     = new JSONParser();   // net.bitnine.JsonObject -> org.simple.JSONObject parser
 		
 		/** phase 1 : ResultSet list while loop **/
 		while (resultSet.next()) {
@@ -73,32 +72,28 @@ public class FormatUtilities {
 				if("vertex".equals(resultSet.getMetaData().getColumnTypeName(i+1).toLowerCase())) {
 					
 					Vertex     vertex  = (Vertex)resultSet.getObject(i+1);
-					JsonObject obj     = new JsonObject();
+					JSONObject obj     = new JSONObject();
 					
 					obj.put("id",         vertex.getVertexId().toString());
-					obj.put("properties", vertex.getProperty());
+					obj.put("properties", vertex.getProperties());
 					obj.put("label",      vertex.getLabel());
 					
-					String objStr = obj.toString();
-					
-					nodes.add(parser.parse(objStr));
-					
+					nodes.add(obj);
+
 				}
 				// Column information is 'EDGE'
 				else if("edge".equals(resultSet.getMetaData().getColumnTypeName(i+1).toLowerCase())) {
 					
 					Edge       edge = (Edge)resultSet.getObject(i+1);
-					JsonObject obj  = new JsonObject();
+					JSONObject obj  = new JSONObject();
 					
 					obj.put("id",         edge.getEdgeId().toString());
-					obj.put("properties", edge.getProperty());
+					obj.put("properties", edge.getProperties());
 					obj.put("label",      edge.getLabel());
 					obj.put("startNode",  edge.getStartVertexId().toString());
-					obj.put("endNode",    edge.getEndVertexid().toString());
-
-					String objStr = obj.toString();
+					obj.put("endNode",    edge.getEndVertexId().toString());
 					
-					edges.add(parser.parse(objStr));
+					edges.add(obj);
 					
 				}
 				// Column information isn't 'VERTEX' or 'EDGE'
