@@ -2,8 +2,8 @@ package net.demo.modules.util;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
@@ -22,7 +22,12 @@ import net.demo.modules.logger.UDLogger;
 @Component
 @SuppressWarnings("unchecked")
 public class FormatUtilities {
+	
+	/**
+	 * slf4j logger
+	 */
 	@UDLogger Logger logger;
+	
 	/**
 	 * Convert a ResultSet into a JSONArray
 	 *

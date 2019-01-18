@@ -95,9 +95,10 @@ public class TestService {
 	 * @return	cytoscape.js graph format JSONArray return
 	 */
 	public JSONArray getNeo4jFormatTest() {		
-		qt.query.append(" MATCH (a)-[r]->(b) RETURN a,r,b ");
+		StringBuffer query = new StringBuffer();
+		query.append(" MATCH (a)-[r]->(b) RETURN a,r,b ");
 		
-		JSONObject result = qt.doGraphQuery(qt.query.toString());
+		JSONObject result = qt.doGraphQuery(query.toString());
 		
 		JSONArray nodes = ((JSONArray)((JSONObject)result.get("graph")).get("nodes"));
 		JSONArray edges = ((JSONArray)((JSONObject)result.get("graph")).get("edges"));

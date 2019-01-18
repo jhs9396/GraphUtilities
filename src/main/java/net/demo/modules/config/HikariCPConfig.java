@@ -49,8 +49,7 @@ public class HikariCPConfig {
     
 	/**
 	 * HikariCP Connection Pool 설정
-	 * @param  Not parameters
-	 * @throws Not throws Exception
+	 * 
 	 * @return HikariCP 설정된 데이터소스 반환
 	 */
 	@Bean(name="DataSource")
@@ -80,8 +79,8 @@ public class HikariCPConfig {
 	
     /**
      * JdbcTemplate HikariCP 연동 설정
+     * 
      * @param  dataSource 	HikariCP Datasource
-     * @throws Not throws Exception
      * @return JdbcTemplate 객체 반환
      */
     @Bean(name = "JdbcTemplate")
