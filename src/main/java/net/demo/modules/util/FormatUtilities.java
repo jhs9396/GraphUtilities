@@ -31,8 +31,7 @@ public class FormatUtilities {
 	/**
 	 * Convert a ResultSet into a JSONArray
 	 *
-	 * @param ResultSet
-	 * @throws SQLException,JSONException
+	 * @param resultSet
 	 * @return JSONArray
 	 */
 	public JSONArray convertToJSONArray(ResultSet resultSet) throws Exception {
@@ -124,7 +123,7 @@ public class FormatUtilities {
 	/**
 	 * Convert a ResultSet into a String XMLArray
 	 *
-	 * @param  ResultSet
+	 * @param  resultSet
 	 * @throws Exception
 	 * @return xmlArray.toString()
 	 */
@@ -170,7 +169,7 @@ public class FormatUtilities {
 	/**
 	 * Convert a Result JSONArray to a edge JSONArray
 	 *
-	 * @param JSONArray
+	 * @param resJson
 	 * @throws Exception
 	 * @return JSONArray with vertices
 	 */

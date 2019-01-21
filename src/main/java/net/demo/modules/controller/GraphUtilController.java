@@ -26,7 +26,7 @@ import net.demo.modules.services.TestService;
  * Graph Utilities test rest controller
  * 
  * @author		HyeonSu Jeon
- * @version		0.2
+ * @version	0.2
  * @since		0.1
  */
 @RestController
@@ -62,7 +62,7 @@ public class GraphUtilController {
 	private Resource<HateoasDTO> resource;
 
 	/**
-	 * Description
+	 * TestService object
 	 */
 	private TestService ts;
 	
@@ -96,7 +96,6 @@ public class GraphUtilController {
 	 * graph data 기본 조회용 컨트롤러
 	 *
 	 * @param  params	화면에서 넘어온 request parameters
-	 * @param  model	화면에 넘길 response parameters
 	 * @return Graph Data return(Nodes, Edges)
 	 */
 	@RequestMapping(value="/data",method=RequestMethod.GET)
@@ -108,6 +107,25 @@ public class GraphUtilController {
 		hd.selfLink(resource, methodOn(this.getClass()).getGraphData(params));
 		
 		logger.debug("[getGraphData] Output: "+resource);
+		
+		return new ResponseEntity<Resource<HateoasDTO>> (resource,productHeaders(),HttpStatus.OK);
+	}
+	
+	/**
+	 * graph data 기본 조회용 컨트롤러
+	 *
+	 * @param  params	화면에서 넘어온 request parameters
+	 * @return Graph Data return(Nodes, Edges)
+	 */
+	@RequestMapping(value="/d3",method=RequestMethod.GET)
+	public ResponseEntity<Resource<HateoasDTO>> getAgMetaGraph(@RequestParam Map<String,Object> params){
+		logger.debug("[getAgMetaGraph] Input: "+params);
+		
+		hd.setParameters(params);
+		hd.setEmbedded(ts.getAgMetaGraph());
+		hd.selfLink(resource, methodOn(this.getClass()).getAgMetaGraph(params));
+		
+		logger.debug("[getAgMetaGraph] Output: "+resource);
 		
 		return new ResponseEntity<Resource<HateoasDTO>> (resource,productHeaders(),HttpStatus.OK);
 	}

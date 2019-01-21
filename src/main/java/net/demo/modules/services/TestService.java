@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
@@ -17,7 +18,7 @@ import net.demo.modules.util.GraphUtilities;
  * AgensGraph Test service
  * 
  * @author		HyeonSu Jeon
- * @version		0.2
+ * @version	0.2
  * @since		0.1
  */
 @Service
@@ -38,6 +39,12 @@ public class TestService {
 	 */
 	QueryTemplate qt;
 	
+	@Value("${spring.datasource.graphpath}")
+	String graphPath;
+
+	@Value("${spring.datasource.username}")
+	String schemaName;
+
 	/**
 	 * SimpleDateformat 연-월-일 시:분:초
 	 */
@@ -55,8 +62,7 @@ public class TestService {
 	
 	/**
 	 * Graph 조회 ---> GraphUtilities를 이용하여 포맷 설정
-	 * 
-	 * @param	not	하지만 화면에서 parameters를 넘겨서 처리 가능
+	 *
 	 * @return	그래프 format에 데이터 입력 후 넘겨주기
 	 */
 	public JSONArray getData() {
@@ -126,5 +132,58 @@ public class TestService {
 		logger.info("getNeo4jFormattest result >> "+result);
 		
 		return gu.toJsonArray();
+	}
+	
+	/**
+	 * AgensGraph Meta graph search service method
+	 * 
+	 * @return	d3.js data return
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getAgMetaGraph() {
+		JSONObject resJson = new JSONObject();
+		// If AgensGraph v2.0 ↑, below query is executing. but ag_graphmeta_view takes a bug. (ag_graphmeta information do not sync.)
+		qt.query.append(" SELECT "
+				      + "         relname AS id "
+				      + "    ,    n_live_tup AS count "
+				      + " FROM    pg_stat_all_tables "
+				      + " WHERE   schemaname = ? "
+				      + " AND     relid IN (SELECT relid FROM pg_catalog.ag_label WHERE labkind = 'v' ) "
+				      + " AND     relname IN (SELECT b.start FROM ag_graphmeta_view b WHERE b.graphname = ? "
+				      + "                     UNION "
+				      + "                     SELECT a.end FROM ag_graphmeta_view a WHERE a.graphname = ?) ");
+		qt.paramList.put("schemaname", schemaName);
+		qt.paramList.put("graphname1", graphPath);
+		qt.paramList.put("graphname2", graphPath);
+
+        // If you are used AgensGraph 1.3~2.0 under version, below query is not executed.
+		// reason : cypher query RETURN ty pe all column, object is 'jsonb' -> if you search graphid_labid, graphid_labid-> text, but after RETURN logic, graphid_labid type is 'text'->'jsonb'
+		// Hybrid query used,  you are able to use PostgreSQL type(e.g ::int, ::text)
+		// executed version : AgensGraph 2.0, 2.1 version
+/*		qt.query.append(" SELECT "
+				 +   "    t1.s_oid AS s_id "
+				 +   " ,  (SELECT labname FROM pg_catalog.ag_label WHERE labid = t1.s_oid::int) AS s_label "
+				 +   " ,  ROW_NUMBER() OVER (ORDER BY t1.e_oid) AS e_id "
+				 +   " ,  (SELECT labname FROM pg_catalog.ag_label WHERE labid = t1.e_oid::int) AS e_label "
+				 +   " ,  t1.t_oid AS t_id "
+				 +   " ,  (SELECT labname FROM pg_catalog.ag_label WHERE labid = t1.t_oid::int) AS t_label "
+				 +   " FROM "
+				 +   "    ( MATCH (a)-[r]->(b) "
+				 +   "      WHERE label(a) <> 'ag_vertex' "
+				 +   "      AND   label(b) <> 'ag_vertex' "
+				 +   "      RETURN DISTINCT graphid_labid(start(r)) as s_oid, graphid_labid(id(r)) as e_oid, graphid_labid(\"end\"(r)) as t_oid "
+				 +   "    ) t1 ");*/
+
+		JSONArray nodes = qt.doQuery(qt.query.toString(), qt.paramList);
+		qt.query.append(" SELECT start as source, \"end\" as target , edge, edgecount "
+				      + " FROM ag_graphmeta_view "
+				      + " where graphname = ? ") ;
+		qt.paramList.put("graphname", graphPath);
+
+		JSONArray edges = qt.doQuery(qt.query.toString(), qt.paramList);
+
+		resJson.put("nodes", nodes);
+		resJson.put("links", edges);
+		return resJson;
 	}
 }

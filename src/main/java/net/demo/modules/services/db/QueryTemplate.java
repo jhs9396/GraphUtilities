@@ -1,33 +1,24 @@
 package net.demo.modules.services.db;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-
+import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
+import net.bitnine.agensgraph.deps.org.json.simple.JSONObject;
+import net.demo.modules.logger.UDLogger;
+import net.demo.modules.util.FormatUtilities;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.CallableStatementCallback;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.core.PreparedStatementSetter;
-import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
-import net.bitnine.agensgraph.deps.org.json.simple.JSONObject;
-import net.demo.modules.logger.UDLogger;
-import net.demo.modules.util.FormatUtilities;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * AgensGraph QueryTemplate by JdbcTemplate
@@ -94,6 +85,8 @@ public class QueryTemplate {
 			}
 		});
 		logger.debug(resJson.toJSONString());
+		initQuery();
+		
 		return resJson;
 	}
 	
@@ -143,10 +136,9 @@ public class QueryTemplate {
 				public void setValues(PreparedStatement ps) throws SQLException {
 					int idx=1;
 					if(paramList != null) {
-						Iterator<String> keys = paramList.keySet().iterator();
-						while(keys.hasNext()) {
-							String key = keys.next();
-							ps.setObject(idx++, paramList.get(key));
+						Set<? extends Map.Entry<String, ?>> keys = paramList.entrySet();
+						for(Map.Entry<String, ?> entry : keys){
+							ps.setObject(idx++, entry.getValue());
 						}
 					}
 					ps.execute();
@@ -212,7 +204,8 @@ public class QueryTemplate {
 				}
 			});
 		logger.debug(resJson.toJSONString());
-		
+		initQuery();
+
 		return resJson;
 	}
 	

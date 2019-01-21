@@ -26,10 +26,18 @@ public class TestController {
 	/**
 	 * main page call method
 	 * 
-	 * @return	index.html call 
+	 * @return	main.html call
 	 */
 	@RequestMapping(value="/main")
 	public String main() {
 		return "main";		
-	}	
+	}
+
+	/**
+	 * d3 page call method
+	 *
+	 * @return d3.html call
+	 */
+	@RequestMapping(value="/d3")
+	public String d3() { return "d3"; }
 }
