@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import net.bitnine.agensgraph.deps.org.json.simple.JSONArray;
 import net.bitnine.agensgraph.deps.org.json.simple.JSONObject;
+import net.bitnine.agensgraph.util.Jsonb;
 import net.demo.modules.logger.UDLogger;
 import net.demo.modules.services.db.QueryTemplate;
 import net.demo.modules.util.GraphUtilities;
@@ -111,8 +112,15 @@ public class TestService {
 		JSONArray etc   = ((JSONObject)result.get("graph")).get("etc") != null ? ((JSONArray)((JSONObject)result.get("graph")).get("etc")) : new JSONArray();
 		
 		for(int i=0; i<nodes.size(); i++) {
+			String value = "";
+			if(((Jsonb)((JSONObject)nodes.get(i)).get("properties")).containsKey("value")) {
+				value = ((Jsonb)((JSONObject)nodes.get(i)).get("properties")).getString("value");
+			}else {
+				value = ((Jsonb)((JSONObject)nodes.get(i)).get("properties")).getString("name");
+			}
+			
 			gu.node(((JSONObject)nodes.get(i)).get("id"), 
-					i,
+					value,
 					((JSONObject)nodes.get(i)).get("label"),
 					"node");
 		}

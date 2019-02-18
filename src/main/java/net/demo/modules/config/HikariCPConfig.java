@@ -34,17 +34,22 @@ public class HikariCPConfig {
 	@Autowired
 	private QueryTemplate queryTemplate;
 	
-	@Value("${db.cpool.setMinimumIdle}")
     Integer minimumIdle;
 	
-	@Value("${db.cpool.setMaximumPoolSize}")
 	Integer maximumPoolSize;
+	
+	String graphPath;
 	
     /**
      * constructor
      */
-    public HikariCPConfig() {
+    public HikariCPConfig(@Value("${spring.datasource.graph-path}")String graphPath,
+    		@Value("${db.cpool.setMinimumIdle}")Integer minimumIdle,
+    		@Value("${db.cpool.setMaximumPoolSize}")Integer maximumPoolSize) {
         super();
+        this.graphPath       = graphPath;
+        this.minimumIdle     = minimumIdle;
+        this.maximumPoolSize = maximumPoolSize;
     }
     
 	/**
@@ -60,6 +65,8 @@ public class HikariCPConfig {
         dataSource.setUsername(env.getProperty("spring.datasource.username"));
         dataSource.setPassword(env.getProperty("spring.datasource.password"));
         dataSource.setConnectionTestQuery("SELECT 1 AS test");
+        
+        dataSource.setConnectionInitSql("SET GRAPH_PATH="+graphPath+";");
         
         if (minimumIdle == null) dataSource.setMinimumIdle(5);
         else dataSource.setMinimumIdle(minimumIdle);
